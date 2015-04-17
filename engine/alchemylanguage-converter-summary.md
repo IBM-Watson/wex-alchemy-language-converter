@@ -12,7 +12,7 @@ AlchemyAPI API Key | This is the key, provided to your organization by AlchemyAP
 Default timeout | This sets the default amount of time, in seconds, to wait for a response from the API call. This value can be overridden for individual services in their specific configuration. | 60 | 
 Proxy server (host:port) | This sets a proxy server through which all AlchemyAPI calls will be directed. It is recommended that a local caching proxy be used to improve performance and reduce the total number of AlchemyAPI calls. |  | 
 Proxy username and password | Provide the credentials used to authenticate to the proxy server configured above. |  | 
-Enable debug contents | If debug contents are enabled, then when any enabled AlchemyAPI service returns an error, a content containing the error message will be added to the document. This is useful for debugging, but it may not be as valuable in your final crawl. |  | 
+Enable debug contents | If debug contents are enabled, then when any enabled AlchemyAPI service returns an error, content containing the error message will be added to the document. This is useful for debugging, but it may not be as valuable in your final crawl. |  | 
 
 
 ## Sentiment Analysis
