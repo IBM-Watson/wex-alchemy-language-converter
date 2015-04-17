@@ -42,7 +42,7 @@ Targeted Sentiment Timeout | This sets the default amount of time, in seconds, t
 
 Name | Description | Default Value | Required?
 ---|---|---|:---:
-Enable | Setting this to true will enable taxonomy classification of the selected text. See the AlchemyAPI Taxonomy documentation for the complete list of possible categories. |  | 
+Enable | Setting this to true will enable taxonomy classification of the selected text. See the [AlchemyAPI Taxonomy documentation](http://www.alchemyapi.com/api/taxonomy) for the complete list of possible categories. |  | 
 Taxonomy URL Path | This string will be concatenated to the end of the AlchemyAPI base URL configured above to generate the URL that points at the Taxonomy service. | calls/text/TextGetRankedTaxonomy | 
 Taxonomy contents | Provide a newline-separated list of the names of contents whose text will be submitted for Taxonomy Analysis. Note that the Alchemy text APIs only consider the first 50kB of text, so text beyond the first 50kB will be trimmed before the API request is sent. | snippet
  | 
