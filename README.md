@@ -26,8 +26,8 @@ The AlchemyLanguage Engine converter can be used during any document ingestion (
 
 ## Prerequisites
 
-- **Watson Explorer Engine**.  This converter was tested against WEX Engine 10.2, but will probably work with any supported version of Watson Explorer Engine, Data Explorer Engine, or Vivisimo Velocity
-- **AlchemyAPI Key**.  An API key can be obtained from AlchemyAPI, an IBM Company by [filling out a simple web form](http://www.alchemyapi.com/api/register.html).
+- **Watson Explorer Engine**.  This converter was tested against WEX Engine 10.0.0.2, but is expected to work with any supported version of Watson Explorer Engine (formerly known as Data Explorer Engine, or Vivisimo Velocity).
+- **AlchemyAPI Key**.  An API key can be obtained from AlchemyAPI, an IBM Company, by [filling out a simple web form](http://www.alchemyapi.com/api/register.html).
 
 
 ## Adding the Converter to Engine
