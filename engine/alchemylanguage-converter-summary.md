@@ -1,4 +1,4 @@
-# Watson Explorer Engine Converter: AlchemyLangauge Converter
+# Watson Explorer Engine Converter: AlchemyLanguage Converter
 AlchemyAPI offers 12 API functions as part of its text analysis service, each of which uses sophisticated natural language processing techniques to analyze your content and add high-level semantic information. These functions are accessed via a REST API, and the data is returned as an easy-to-parse structure. An API key required to use the AlchemyLanguage service and can be acquired from the Alchemy API wesbsite (http://www.alchemyapi.com/api/register.html).
 
  See the AlchemyLanguage API Reference for examples and detailed information on each AlchemyLanguage function (http://www.alchemyapi.com/products/alchemylanguage).
