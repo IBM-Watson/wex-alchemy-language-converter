@@ -39,7 +39,7 @@ Follow these steps to add the converter to Engine.
 3. Paste the copied XML into the Engine XML text box, replacing all text that was previously there.
 4. Save the converter configuration by clicking 'OK'
 
-To use the AlchemyLanaguage converter in an Engine search collection, navigate to the collection's converter tab, add a new converter, and select the AlchemyLanguage Converter.  The converter function will be available in the collection's conversion pipeline and is now ready to be configured.
+To use the AlchemyLanguage converter in an Engine search collection, navigate to the collection's converter tab, add a new converter, and select the AlchemyLanguage Converter.  The converter function will be available in the collection's conversion pipeline and is now ready to be configured.
 
 ## Configuring the AlchemyLanguage Converter
 
