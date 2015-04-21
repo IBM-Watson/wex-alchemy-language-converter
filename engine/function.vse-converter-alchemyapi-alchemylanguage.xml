@@ -534,156 +534,153 @@ but we also want to run some AlchemyAPI analysis -->
   <!-- That takes care of the document element and children, now add AlchemyAPI analysis -->
 
     <!-- Sentiment -->
-    <xsl:if test="$enable-sentiment-analysis" >
-      <xsl:variable name="sentiment-analysis-contents-padded" select="concat('&#10;', $sentiment-analysis-contents, '&#10;')" />
+    <xsl:if test="$enable-sentiment-analysis">
+
       <xsl:variable name="sentiment-analysis-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($sentiment-analysis-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$sentiment-analysis-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="sentiment-analysis-text-trimmed" select="substring(normalize-space($sentiment-analysis-text), 0, 50000)" />
 
-      <xsl:if test="$sentiment-analysis-text-trimmed != '' " >
+      <xsl:if test="$sentiment-analysis-text != '' " >
         <xsl:apply-templates select="." mode="text-sentiment" >
-          <xsl:with-param name="text"><xsl:value-of select="$sentiment-analysis-text-trimmed" /></xsl:with-param>
+          <xsl:with-param name="text"><xsl:value-of select="$sentiment-analysis-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
+
     </xsl:if>
+
 
     <!-- Targeted Sentiment -->
     <xsl:if test="$enable-targeted-sentiment" >
 
-      <xsl:variable name="targeted-sentiment-target" select="dyn:evaluate($targeted-sentiment-target-xpath)" />
-
-      <xsl:variable name="targeted-sentiment-text-contents-padded" select="concat('&#10;', $targeted-sentiment-text-contents, '&#10;')" />
       <xsl:variable name="targeted-sentiment-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($targeted-sentiment-text-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$targeted-sentiment-text-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="targeted-sentiment-text-trimmed" select="substring(normalize-space($targeted-sentiment-text), 0, 50000)" />
 
-      <xsl:if test="( $targeted-sentiment-target != '' ) and ( $targeted-sentiment-text-trimmed != '' )" >
+      <xsl:variable name="targeted-sentiment-target" select="dyn:evaluate($targeted-sentiment-target-xpath)" />
+      <xsl:if test="( $targeted-sentiment-target != '' ) and ( $targeted-sentiment-text != '' )" >
         <xsl:apply-templates select="." mode="targeted-sentiment" >
-            <xsl:with-param name="text"><xsl:value-of select="$targeted-sentiment-text-trimmed" /></xsl:with-param>
+            <xsl:with-param name="text"><xsl:value-of select="$targeted-sentiment-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
+
     </xsl:if>
+
+
 
     <!-- Taxonomy -->
     <xsl:if test="$enable-taxonomy" >
 
-      <xsl:variable name="taxonomy-contents-padded" select="concat('&#10;', $taxonomy-contents, '&#10;')" />
       <xsl:variable name="taxonomy-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($taxonomy-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$taxonomy-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="taxonomy-text-trimmed" select="substring(normalize-space($taxonomy-text), 0, 50000)" />
 
-      <xsl:if test="$taxonomy-text-trimmed != '' " >
+      <xsl:if test="$taxonomy-text != '' " >
         <xsl:apply-templates select="." mode="taxonomy" >
-            <xsl:with-param name="text"><xsl:value-of select="$taxonomy-text-trimmed" /></xsl:with-param>
+            <xsl:with-param name="text"><xsl:value-of select="$taxonomy-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
+
     </xsl:if>
+
+
 
     <!-- Concept Tagging -->
     <xsl:if test="$enable-concept-tagging" >
 
-      <xsl:variable name="concept-tagging-contents-padded" select="concat('&#10;', $concept-tagging-contents, '&#10;')" />
       <xsl:variable name="concept-tagging-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($concept-tagging-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$sentiment-analysis-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="concept-tagging-text-trimmed" select="substring(normalize-space($concept-tagging-text), 0, 50000)" />
-
-      <xsl:if test="$concept-tagging-text-trimmed != '' " >
+      <xsl:if test="$concept-tagging-text != '' " >
         <xsl:apply-templates select="." mode="concept-tagging" >
-            <xsl:with-param name="text"><xsl:value-of select="$concept-tagging-text-trimmed" /></xsl:with-param>
+            <xsl:with-param name="text"><xsl:value-of select="$concept-tagging-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
+
     </xsl:if>
 
     
+
     <!-- Entity Extraction -->
-    <xsl:if test="$enable-entity-extraction" >
-      <xsl:variable name="entity-extraction-contents-padded" select="concat('&#10;', $entity-extraction-contents, '&#10;')" />
-      <xsl:variable name="entity-extraction-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($entity-extraction-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+    <xsl:if test="$enable-entity-extraction">
+
+      <xsl:variable name="entity-extraction-text">
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$entity-extraction-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="entity-extraction-text-trimmed" select="substring(normalize-space($entity-extraction-text), 0, 50000)" />
 
-      <xsl:if test="$entity-extraction-text-trimmed != '' " >
+      <xsl:if test="$entity-extraction-text != '' " >
         <xsl:apply-templates select="." mode="entity-extraction" >
-          <xsl:with-param name="text"><xsl:value-of select="$entity-extraction-text-trimmed" /></xsl:with-param>
+          <xsl:with-param name="text"><xsl:value-of select="$entity-extraction-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
+
     </xsl:if>
     
     
+
+
     <!-- Keyword Extraction -->
-    <xsl:if test="$enable-keyword-extraction" >
-      <xsl:variable name="keyword-extraction-contents-padded" select="concat('&#10;', $keyword-extraction-contents, '&#10;')" />
+    <xsl:if test="$enable-keyword-extraction">
+
       <xsl:variable name="keyword-extraction-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($keyword-extraction-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$keyword-extraction-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="keyword-extraction-text-trimmed" select="substring(normalize-space($keyword-extraction-text), 0, 50000)" />
 
-      <xsl:if test="$keyword-extraction-text-trimmed != '' " >
+    <xsl:if test="$keyword-extraction-text != '' " >
         <xsl:apply-templates select="." mode="keyword-extraction" >
-          <xsl:with-param name="text"><xsl:value-of select="$keyword-extraction-text-trimmed" /></xsl:with-param>
+          <xsl:with-param name="text"><xsl:value-of select="$keyword-extraction-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
     
     
+
     <!-- Relation Extraction -->
-    <xsl:if test="$enable-relation-extraction" >
-      <xsl:variable name="relation-extraction-contents-padded" select="concat('&#10;', $relation-extraction-contents, '&#10;')" />
+    <xsl:if test="$enable-relation-extraction">
+
       <xsl:variable name="relation-extraction-text" >
-        <xsl:for-each select="content" >
-          <xsl:if test="contains($relation-extraction-contents-padded, concat('&#10;', @name, '&#10;'))" >
-            <xsl:value-of select="concat(./text(), '&#10;')" />
-          </xsl:if>
-        </xsl:for-each>
+        <xsl:call-template name="gather-text">
+          <xsl:with-param name="content-names" select="$relation-extraction-contents" />
+          <xsl:with-param name="document" select="." />
+        </xsl:call-template>
       </xsl:variable>
 
-      <xsl:variable name="relation-extraction-text-trimmed" select="substring(normalize-space($relation-extraction-text), 0, 50000)" />
 
-      <xsl:if test="$relation-extraction-text-trimmed != '' " >
+      <xsl:if test="$relation-extraction-text != '' " >
         <xsl:apply-templates select="." mode="relation-extraction" >
-          <xsl:with-param name="text"><xsl:value-of select="$relation-extraction-text-trimmed" /></xsl:with-param>
+          <xsl:with-param name="text"><xsl:value-of select="$relation-extraction-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
 
-    
   </xsl:copy>
 </xsl:template>
+
+
+
 
 
 <!-- Sentiment -->
@@ -729,23 +726,11 @@ but we also want to run some AlchemyAPI analysis -->
       </content>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-document-sentiment-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-document-sentiment-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-document-sentiment-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-document-sentiment-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-document-sentiment-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">document-sentiment</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -797,26 +782,17 @@ but we also want to run some AlchemyAPI analysis -->
       </content>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-targeted-sentiment-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-targeted-sentiment-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-targeted-sentiment-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-targeted-sentiment-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-targeted-sentiment-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">targeted-sentiment</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
+
 </xsl:template>
+
+
 
 <!-- Taxonomy -->
 <xsl:template match="document" mode="taxonomy" >
@@ -858,52 +834,46 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-taxonomy-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-taxonomy-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-taxonomy-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-taxonomy-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-taxonomy-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">taxonomy</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
 
+
+
 <!-- Concept Tagging -->
 <xsl:template match="document" mode="concept-tagging" >
   <xsl:param name="text" />
+
   <xsl:variable name="concept-tagging-url" select="concat($alchemy-base-url, $concept-tagging-url-path)" />
   <xsl:variable name="timeout" select="viv:choose($concept-tagging-timeout = 0, $default-timeout, $concept-tagging-timeout) * 1000" />
+  
   <xsl:variable name="xml">
     <parse url="{$concept-tagging-url}" method="POST">
       <xsl:if test="$proxy-host-port" >
-        <attribute name="proxy" value="{$proxy-host-port}" />
+          <attribute name="proxy" value="{$proxy-host-port}" />
       </xsl:if>
       <xsl:if test="$proxy-user-pass" >
-        <attribute name="proxy-user-password" value="{$proxy-user-pass}" />
+          <attribute name="proxy-user-password" value="{$proxy-user-pass}" />
       </xsl:if>
+    
       <parse-param name="outputmode" value="xml" />
       <parse-param name="apikey">
-        <attribute name="value"><xsl:value-of select="$alchemy-apikey" /></attribute>
+          <attribute name="value"><xsl:value-of select="$alchemy-apikey" /></attribute>
       </parse-param>
+    
       <parse-param name="text">
-        <attribute name="value">
-          <xsl:value-of select="$text" />
-        </attribute>
+        <attribute name="value"><xsl:value-of select="$text" /></attribute>
       </parse-param>
+
       <parse-param name="linkedData" value="0" />
       <parse-param name="knowledgeGraph" value="0" />
     </parse>
+    
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
 
@@ -920,26 +890,17 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-concept-tagging-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-concept-tagging-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-concept-tagging-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-concept-tagging-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-concept-tagging-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">concept-tagging</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
+
+
+
 
 <!-- Entity Extraction -->
 <xsl:template match="document" mode="entity-extraction" >
@@ -1016,23 +977,11 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-entity-extraction-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-entity-extraction-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-entity-extraction-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-entity-extraction-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-entity-extraction-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">entity-extraction</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -1082,23 +1031,11 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-keyword-extraction-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-keyword-extraction-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-keyword-extraction-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-keyword-extraction-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-keyword-extraction-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">keyword-extraction</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
@@ -1157,25 +1094,58 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:for-each>
     </xsl:when>
     <xsl:otherwise>
-      <xsl:if test="$debug" >
-        <content name="alchemyapi-debug-relation-extraction-parse-url" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@url" />
-        </content>
-        <content name="alchemyapi-debug-relation-extraction-parse-http-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@http-status" />
-        </content>
-        <content name="alchemyapi-debug-relation-extraction-parse-status" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@status" />
-        </content>
-        <content name="alchemyapi-debug-relation-extraction-parse-message" action="none" type="text" >
-          <xsl:value-of select="$r/parse/@message" />
-        </content>
-        <content name="alchemyapi-debug-relation-extraction-service-error" action="none" type="text">
-          <xsl:value-of select="$r/results/statusInfo" />
-        </content>
-      </xsl:if>
+      <xsl:call-template name="show-debug-information">
+        <xsl:with-param name="result" select="$r" />
+        <xsl:with-param name="is-debug" select="$debug" />
+        <xsl:with-param name="label">relation-extraction</xsl:with-param>
+      </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
+</xsl:template>
+
+
+
+<xsl:template name="gather-text">
+  <xsl:param name="content-names" />
+  <xsl:param name="document" />
+
+  <xsl:variable name="content-names-padded" select="concat('&#10;', $content-names, '&#10;')" />
+  <xsl:variable name="text" >
+    <xsl:for-each select="$document/content" >
+      <xsl:if test="contains($content-names-padded, concat('&#10;', @name, '&#10;'))" >
+        <xsl:value-of select="concat(./text(), '&#10;')" />
+      </xsl:if>
+    </xsl:for-each>
+  </xsl:variable>
+
+  <xsl:variable name="detagged-text" select="viv:replace($text, '&lt;/?(div|span)&gt;', '', 'g')" />
+  <xsl:value-of select="substring(normalize-space($detagged-text), 0, 50000)" />
+</xsl:template>
+
+
+
+<xsl:template name="show-debug-information">
+  <xsl:param name="result" />
+  <xsl:param name="is-debug" />
+  <xsl:param name="label" />
+
+  <xsl:if test="$is-debug" >
+    <content name="alchemyapi-debug-{$label}-parse-url" action="none" type="text" >
+      <xsl:value-of select="$result/parse/@url" />
+    </content>
+    <content name="alchemyapi-debug-{$label}-parse-http-status" action="none" type="text" >
+      <xsl:value-of select="$result/parse/@http-status" />
+    </content>
+    <content name="alchemyapi-debug-{$label}-parse-status" action="none" type="text" >
+      <xsl:value-of select="$result/parse/@status" />
+    </content>
+    <content name="alchemyapi-debug-{$label}-parse-message" action="none" type="text" >
+      <xsl:value-of select="$result/parse/@message" />
+    </content>
+    <content name="alchemyapi-debug-{$label}-service-error" action="none" type="text">
+      <xsl:value-of select="$result/results/statusInfo" />
+    </content>
+  </xsl:if>
 </xsl:template>
 
 ]]></parser>
