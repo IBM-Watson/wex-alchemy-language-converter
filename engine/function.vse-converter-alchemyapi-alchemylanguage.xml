@@ -601,7 +601,7 @@ but we also want to run some AlchemyAPI analysis -->
 
       <xsl:variable name="concept-tagging-text" >
         <xsl:call-template name="gather-text">
-          <xsl:with-param name="content-names" select="$sentiment-analysis-contents" />
+          <xsl:with-param name="content-names" select="$concept-tagging-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
