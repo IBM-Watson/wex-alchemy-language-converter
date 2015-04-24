@@ -1,4 +1,4 @@
-<function max-elt-id="1759" name="vse-converter-alchemyapi-alchemylanguage" type="converter" modified-by="oehlschlager@IBM Watson Group" type-in="application/vxml-unnormalized" type-out="application/vxml-unnormalized" modified="1429114160">
+<function max-elt-id="2707" name="vse-converter-alchemyapi-alchemylanguage" type="converter" modified-by="mkeeling@IBM" type-in="application/vxml-unnormalized" type-out="application/vxml-unnormalized" modified="1429811494">
   <prototype>
     <description name="description">
       AlchemyAPI offers 12 API functions as part of its text analysis service, each of which uses sophisticated natural language processing techniques to analyze your content and add high-level semantic information. These functions are accessed via a REST API, and the data is returned as an easy-to-parse structure.  An API key required to use the AlchemyLanguage service and can be acquired from the Alchemy API wesbsite (http://www.alchemyapi.com/api/register.html).
@@ -144,6 +144,10 @@
       <declare type="positive-int" name="entity-extraction-max" initial-value="10">
         <label name="label">Maximum Entities</label>
         <description name="description">This sets the maximum number of entities to extract.  Entities in the text that might be found beyond this limit will not be returned.</description>
+      </declare>
+      <declare type="flag" name="entity-link-data">
+        <label name="label">Return Link Data</label>
+        <description name="description">Return semantic link data (e.g. DBPedia) if available.</description>
       </declare>
       <declare type="number" name="entity-extraction-timeout" initial-value="0">
         <label name="label">Entity Extraction Timeout</label>
@@ -415,6 +419,14 @@
       </with>
     </call-function>
     <call-function name="xsl-parser-variable">
+      <with name="name">entity-link-data</with>
+      <with name="value">
+        <if-var name="entity-link-data">
+          <value-of-var name="entity-link-data" />
+        </if-var>
+      </with>
+    </call-function>
+    <call-function name="xsl-parser-variable">
       <with name="name">entity-extraction-max</with>
       <with name="value">
         <if-var name="entity-extraction-max">
@@ -510,145 +522,105 @@
         </if-var>
       </with>
     </call-function><![CDATA[
-
 <xsl:variable name="apos">'</xsl:variable>
 <xsl:variable name="sgts"> &gt; </xsl:variable>
-
 <xsl:template match="/">
   <!-- copy the input -->
   <xsl:apply-templates mode="copy" />
 </xsl:template>
-
 <xsl:template match="@*|node()" mode="copy" >
   <xsl:copy>
     <xsl:apply-templates select="@*|node()" mode="copy"/>
   </xsl:copy>
 </xsl:template>
-
 <xsl:template match="document" mode="copy" >
 <!-- when we have a document element, we want to copy it too,
 but we also want to run some AlchemyAPI analysis -->
   <xsl:copy>
     <xsl:apply-templates select="@*|node()" mode="copy" />
-
   <!-- That takes care of the document element and children, now add AlchemyAPI analysis -->
-
     <!-- Sentiment -->
     <xsl:if test="$enable-sentiment-analysis">
-
       <xsl:variable name="sentiment-analysis-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$sentiment-analysis-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
       <xsl:if test="$sentiment-analysis-text != '' " >
         <xsl:apply-templates select="." mode="text-sentiment" >
           <xsl:with-param name="text"><xsl:value-of select="$sentiment-analysis-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
-
     </xsl:if>
-
-
     <!-- Targeted Sentiment -->
     <xsl:if test="$enable-targeted-sentiment" >
-
       <xsl:variable name="targeted-sentiment-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$targeted-sentiment-text-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
       <xsl:variable name="targeted-sentiment-target" select="dyn:evaluate($targeted-sentiment-target-xpath)" />
       <xsl:if test="( $targeted-sentiment-target != '' ) and ( $targeted-sentiment-text != '' )" >
         <xsl:apply-templates select="." mode="targeted-sentiment" >
             <xsl:with-param name="text"><xsl:value-of select="$targeted-sentiment-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
-
     </xsl:if>
-
-
-
     <!-- Taxonomy -->
     <xsl:if test="$enable-taxonomy" >
-
       <xsl:variable name="taxonomy-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$taxonomy-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
       <xsl:if test="$taxonomy-text != '' " >
         <xsl:apply-templates select="." mode="taxonomy" >
             <xsl:with-param name="text"><xsl:value-of select="$taxonomy-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
-
     </xsl:if>
-
-
-
     <!-- Concept Tagging -->
     <xsl:if test="$enable-concept-tagging" >
-
       <xsl:variable name="concept-tagging-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$concept-tagging-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
       <xsl:if test="$concept-tagging-text != '' " >
         <xsl:apply-templates select="." mode="concept-tagging" >
             <xsl:with-param name="text"><xsl:value-of select="$concept-tagging-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
-
     </xsl:if>
-
     
-
     <!-- Entity Extraction -->
     <xsl:if test="$enable-entity-extraction">
-
       <xsl:variable name="entity-extraction-text">
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$entity-extraction-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
       <xsl:if test="$entity-extraction-text != '' " >
         <xsl:apply-templates select="." mode="entity-extraction" >
           <xsl:with-param name="text"><xsl:value-of select="$entity-extraction-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
-
     </xsl:if>
     
     
-
-
     <!-- Keyword Extraction -->
     <xsl:if test="$enable-keyword-extraction">
-
       <xsl:variable name="keyword-extraction-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$keyword-extraction-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
     <xsl:if test="$keyword-extraction-text != '' " >
         <xsl:apply-templates select="." mode="keyword-extraction" >
           <xsl:with-param name="text"><xsl:value-of select="$keyword-extraction-text" /></xsl:with-param>
@@ -657,32 +629,22 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:if>
     
     
-
     <!-- Relation Extraction -->
     <xsl:if test="$enable-relation-extraction">
-
       <xsl:variable name="relation-extraction-text" >
         <xsl:call-template name="gather-text">
           <xsl:with-param name="content-names" select="$relation-extraction-contents" />
           <xsl:with-param name="document" select="." />
         </xsl:call-template>
       </xsl:variable>
-
-
       <xsl:if test="$relation-extraction-text != '' " >
         <xsl:apply-templates select="." mode="relation-extraction" >
           <xsl:with-param name="text"><xsl:value-of select="$relation-extraction-text" /></xsl:with-param>
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
-
   </xsl:copy>
 </xsl:template>
-
-
-
-
-
 <!-- Sentiment -->
 <xsl:template match="document" mode="text-sentiment" >
   <xsl:param name="text" />
@@ -708,10 +670,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -734,7 +694,6 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
 <!-- Targeted Sentiment -->
 <xsl:template match="document" mode="targeted-sentiment" >
   <xsl:param name="text" />
@@ -761,10 +720,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API fetch and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -789,11 +746,7 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
-
 </xsl:template>
-
-
-
 <!-- Taxonomy -->
 <xsl:template match="document" mode="taxonomy" >
   <xsl:param name="text" />
@@ -819,10 +772,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -842,13 +793,9 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
-
 <!-- Concept Tagging -->
 <xsl:template match="document" mode="concept-tagging" >
   <xsl:param name="text" />
-
   <xsl:variable name="concept-tagging-url" select="concat($alchemy-base-url, $concept-tagging-url-path)" />
   <xsl:variable name="timeout" select="viv:choose($concept-tagging-timeout = 0, $default-timeout, $concept-tagging-timeout) * 1000" />
   
@@ -869,17 +816,14 @@ but we also want to run some AlchemyAPI analysis -->
       <parse-param name="text">
         <attribute name="value"><xsl:value-of select="$text" /></attribute>
       </parse-param>
-
       <parse-param name="linkedData" value="0" />
       <parse-param name="knowledgeGraph" value="0" />
     </parse>
     
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -898,10 +842,6 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
-
-
 <!-- Entity Extraction -->
 <xsl:template match="document" mode="entity-extraction" >
   <xsl:param name="text" />
@@ -925,7 +865,7 @@ but we also want to run some AlchemyAPI analysis -->
         </attribute>
       </parse-param>
       <parse-param name="disambiguate" value="1" />
-      <parse-param name="linkedData" value="0" />
+      <parse-param name="linkedData" value="={viv:if-else($entity-link-data, 1, 0)}" />
       <parse-param name="coreference" value="1" />
       <parse-param name="quotations" value="0" />
       <parse-param name="sentiment" value="0" />
@@ -936,10 +876,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -952,16 +890,20 @@ but we also want to run some AlchemyAPI analysis -->
             <xsl:when test="count(.//disambiguated) > 0" >
               <xsl:for-each select=".//disambiguated" >
                 <xsl:variable name="entity-name" select="name" />
+                <xsl:variable name="entity-website" select="website" />
+                <xsl:variable name="entity-dbpedia" select="dbpedia" />
+                <xsl:variable name="entity-freebase" select="freebase" />
+                <xsl:variable name="entity-yago" select="yago" />
                 <xsl:choose>
                   <xsl:when test="count(.//subType) > 0">
                     <xsl:for-each select=".//subType" >
-                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" >
+                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
                         <xsl:value-of select="concat($entity-type, $sgts, ., $sgts, $detected-entity, $sgts, $entity-name)" />
                       </content>
                     </xsl:for-each>
                   </xsl:when>
                   <xsl:otherwise>
-                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" >
+                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
                         <xsl:value-of select="concat($entity-type, $sgts, $entity-name)" />
                       </content>
                   </xsl:otherwise>
@@ -985,8 +927,6 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <!-- Keyword Extraction -->
 <xsl:template match="document" mode="keyword-extraction" >
   <xsl:param name="text" />
@@ -1017,10 +957,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -1039,8 +977,6 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 <!-- Relation Extraction -->
 <xsl:template match="document" mode="relation-extraction" >
   <xsl:param name="text" />
@@ -1076,10 +1012,8 @@ but we also want to run some AlchemyAPI analysis -->
     </parse>
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
-
   <!-- execute the fetch pointing at the API -->
   <xsl:variable name="r" select="viv:process-xml($xml)" />
-
   <!-- check the results from the API and add appropriate contents -->
   <xsl:choose>
     <xsl:when test="$r/results/status = 'OK'" >
@@ -1102,13 +1036,9 @@ but we also want to run some AlchemyAPI analysis -->
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
-
 <xsl:template name="gather-text">
   <xsl:param name="content-names" />
   <xsl:param name="document" />
-
   <xsl:variable name="content-names-padded" select="concat('&#10;', $content-names, '&#10;')" />
   <xsl:variable name="text" >
     <xsl:for-each select="$document/content" >
@@ -1117,18 +1047,13 @@ but we also want to run some AlchemyAPI analysis -->
       </xsl:if>
     </xsl:for-each>
   </xsl:variable>
-
-  <xsl:variable name="detagged-text" select="viv:replace($text, '&lt;/?(div|span)&gt;', '', 'g')" />
+  <xsl:variable name="detagged-text" select="viv:replace(viv:replace($text, '&lt;/?(div|span|br)/?&gt;', '', 'g'), ']]>&#160;<![CDATA[', '', 'g')" />
   <xsl:value-of select="substring(normalize-space($detagged-text), 0, 50000)" />
 </xsl:template>
-
-
-
 <xsl:template name="show-debug-information">
   <xsl:param name="result" />
   <xsl:param name="is-debug" />
   <xsl:param name="label" />
-
   <xsl:if test="$is-debug" >
     <content name="alchemyapi-debug-{$label}-parse-url" action="none" type="text" >
       <xsl:value-of select="$result/parse/@url" />
@@ -1147,6 +1072,5 @@ but we also want to run some AlchemyAPI analysis -->
     </content>
   </xsl:if>
 </xsl:template>
-
 ]]></parser>
 </function>
