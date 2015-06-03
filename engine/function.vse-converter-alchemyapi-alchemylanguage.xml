@@ -1,44 +1,44 @@
 <function max-elt-id="2707" name="vse-converter-alchemyapi-alchemylanguage" type="converter" modified-by="mkeeling@IBM" type-in="application/vxml-unnormalized" type-out="application/vxml-unnormalized" modified="1429811494">
   <prototype>
-    <description name="description">
+    <description>
       AlchemyAPI offers 12 API functions as part of its text analysis service, each of which uses sophisticated natural language processing techniques to analyze your content and add high-level semantic information. These functions are accessed via a REST API, and the data is returned as an easy-to-parse structure.  An API key required to use the AlchemyLanguage service and can be acquired from the Alchemy API wesbsite (http://www.alchemyapi.com/api/register.html).
 
       See the AlchemyLanguage API Reference for examples and detailed information on each AlchemyLanguage function (http://www.alchemyapi.com/products/alchemylanguage).
     </description>
-    <label name="label">AlchemyLangauge Converter</label>
+    <label>AlchemyLangauge Converter</label>
 
     <!-- Global -->
     <declare type="url" name="alchemy-base-url" initial-value="https://access.alchemyapi.com/">
-      <label name="label">AlchemyAPI base URL</label>
-      <description name="description">REST endpoints for all API requests will be built from this starting point.
+      <label>AlchemyAPI base URL</label>
+      <description>REST endpoints for all API requests will be built from this starting point.
       </description>
     </declare>
     <declare type="string" name="alchemy-apikey" required="required">
-      <label name="label">AlchemyAPI API Key</label>
-      <description name="description">This is the key, provided to your organization by AlchemyAPI, an IBM company, that grants access to the AlchemyAPI services.  A key can be obtained from http://www.alchemyapi.com/api/register.html</description>
+      <label>AlchemyAPI API Key</label>
+      <description>This is the key, provided to your organization by AlchemyAPI, an IBM company, that grants access to the AlchemyAPI services.  A key can be obtained from http://www.alchemyapi.com/api/register.html</description>
     </declare>
     <declare type="number" name="default-timeout" initial-value="60" units="seconds">
-      <label name="label">Default timeout</label>
-      <description name="description">This sets the default amount of time, in seconds, to wait for a response from the API call.  This value can be overridden for individual services in their specific configuration.</description>
+      <label>Default timeout</label>
+      <description>This sets the default amount of time, in seconds, to wait for a response from the API call.  This value can be overridden for individual services in their specific configuration.</description>
     </declare>
     <declare type="string" name="proxy-host-port">
-      <label name="label">Proxy server (host:port)</label>
-      <description name="description">This sets a proxy server through which all AlchemyAPI calls will be directed.  It is recommended that a local caching proxy be used to improve performance and reduce the total number of AlchemyAPI calls.</description>
+      <label>Proxy server (host:port)</label>
+      <description>This sets a proxy server through which all AlchemyAPI calls will be directed.  It is recommended that a local caching proxy be used to improve performance and reduce the total number of AlchemyAPI calls.</description>
     </declare>
     <declare type="user-password" name="proxy-user-pass">
-      <label name="label">Proxy username and password</label>
-      <description name="description">Provide the credentials used to authenticate to the proxy server configured above.</description>
+      <label>Proxy username and password</label>
+      <description>Provide the credentials used to authenticate to the proxy server configured above.</description>
     </declare>
     <declare type="flag" name="debug">
-      <label name="label">Enable debug contents</label>
-      <description name="description">If debug contents are enabled, then when any enabled AlchemyAPI service returns an error, a content containing the error message will be added to the document.  This is useful for debugging, but it may not be as valuable in your final crawl.</description>
+      <label>Enable debug contents</label>
+      <description>If debug contents are enabled, then when any enabled AlchemyAPI service returns an error, a content containing the error message will be added to the document.  This is useful for debugging, but it may not be as valuable in your final crawl.</description>
     </declare>
 
     <!-- Sentiment Analysis -->
     <proto-section section="Sentiment Analysis" toggle-section="toggle-section">
       <declare name="enable-sentiment-analysis" type="flag">
         <label>Enable</label>
-        <description>Setting this to true will enable extracting positive/negative sentiment from any textual content. 
+        <description>Setting this to true will enable extracting positive/negative sentiment from any textual content.
 </description>
       </declare>
       <declare type="string" initial-value="calls/text/TextGetTextSentiment" name="sentiment-analysis-url-path">
@@ -51,8 +51,8 @@
 </description>
       </declare>
       <declare type="number" name="sentiment-analysis-timeout" initial-value="0">
-        <label name="label">Sentiment Analysis Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Sentiment Analysis API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Sentiment Analysis Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Sentiment Analysis API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -60,7 +60,7 @@
     <proto-section section="Targeted Sentiment" toggle-section="toggle-section">
       <declare name="enable-targeted-sentiment" type="flag">
         <label>Enable</label>
-        <description>Setting this to true will enable extracting positive/negative sentiment targeted at a specified phrase from any textual content. 
+        <description>Setting this to true will enable extracting positive/negative sentiment targeted at a specified phrase from any textual content.
 </description>
       </declare>
       <declare type="string" initial-value="calls/text/TextGetTargetedSentiment" name="targeted-sentiment-url-path">
@@ -78,8 +78,8 @@
 </description>
       </declare>
       <declare type="number" name="targeted-sentiment-timeout" initial-value="0">
-        <label name="label">Targeted Sentiment Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Targeted Sentiment API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Targeted Sentiment Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Targeted Sentiment API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -99,8 +99,8 @@
 </description>
       </declare>
       <declare type="number" name="taxonomy-timeout" initial-value="0">
-        <label name="label">Taxonomy Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Taxonomy API call.    A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Taxonomy Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Taxonomy API call.    A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -120,8 +120,8 @@
 </description>
       </declare>
       <declare type="number" name="concept-tagging-timeout" initial-value="0">
-        <label name="label">Concept Tagging Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Concept Tagging API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Concept Tagging Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Concept Tagging API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -129,7 +129,7 @@
     <proto-section section="Entity Extraction" toggle-section="toggle-section">
       <declare name="enable-entity-extraction" type="flag">
         <label>Enable</label>
-        <description>Setting this to true will enable discovery and extraction of entities from any textual content. 
+        <description>Setting this to true will enable discovery and extraction of entities from any textual content.
 </description>
       </declare>
       <declare type="string" initial-value="calls/text/TextGetRankedNamedEntities" name="entity-extraction-url-path">
@@ -142,16 +142,16 @@
 </description>
       </declare>
       <declare type="positive-int" name="entity-extraction-max" initial-value="10">
-        <label name="label">Maximum Entities</label>
-        <description name="description">This sets the maximum number of entities to extract.  Entities in the text that might be found beyond this limit will not be returned.</description>
+        <label>Maximum Entities</label>
+        <description>This sets the maximum number of entities to extract.  Entities in the text that might be found beyond this limit will not be returned.</description>
       </declare>
       <declare type="flag" name="entity-link-data">
-        <label name="label">Return Link Data</label>
-        <description name="description">Return semantic link data (e.g. DBPedia) if available.</description>
+        <label>Return Link Data</label>
+        <description>Return semantic link data (e.g. DBPedia) if available.</description>
       </declare>
       <declare type="number" name="entity-extraction-timeout" initial-value="0">
-        <label name="label">Entity Extraction Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Entity Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Entity Extraction Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Entity Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -159,7 +159,7 @@
     <proto-section section="Keyword Extraction" toggle-section="toggle-section">
       <declare name="enable-keyword-extraction" type="flag">
         <label>Enable</label>
-        <description>Setting this to true will enable discovery and extraction of topic keywords from any textual content. 
+        <description>Setting this to true will enable discovery and extraction of topic keywords from any textual content.
 </description>
       </declare>
       <declare type="string" initial-value="calls/text/TextGetRankedKeywords" name="keyword-extraction-url-path">
@@ -172,12 +172,12 @@
 </description>
       </declare>
       <declare type="positive-int" name="keyword-extraction-max" initial-value="10">
-        <label name="label">Maximum Keywords</label>
-        <description name="description">This sets the maximum number of keywords to extract.  Keywords in the text that might be found beyond this limit will not be returned.</description>
+        <label>Maximum Keywords</label>
+        <description>This sets the maximum number of keywords to extract.  Keywords in the text that might be found beyond this limit will not be returned.</description>
       </declare>
       <declare type="number" name="keyword-extraction-timeout" initial-value="0">
-        <label name="label">Keyword Extraction Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Keyword Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Keyword Extraction Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Keyword Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
 
@@ -186,7 +186,7 @@
     <proto-section section="Relation Extraction" toggle-section="toggle-section">
       <declare name="enable-relation-extraction" type="flag">
         <label>Enable</label>
-        <description>Setting this to true will enable discovery and extraction of Subject-Action-Object relations from any textual content. 
+        <description>Setting this to true will enable discovery and extraction of Subject-Action-Object relations from any textual content.
 </description>
       </declare>
       <declare type="string" initial-value="calls/text/TextGetRelations" name="relation-extraction-url-path">
@@ -199,12 +199,12 @@
 </description>
       </declare>
       <declare type="positive-int" name="relation-extraction-max" initial-value="10" max="100">
-        <label name="label">Maximum Relations</label>
-        <description name="description">This sets the maximum number of relations to extract.  Relations in the text that might be found beyond this limit will not be returned.  The maximum value for this setting is 100.</description>
+        <label>Maximum Relations</label>
+        <description>This sets the maximum number of relations to extract.  Relations in the text that might be found beyond this limit will not be returned.  The maximum value for this setting is 100.</description>
       </declare>
       <declare type="number" name="relation-extraction-timeout" initial-value="0">
-        <label name="label">Relation Extraction Timeout</label>
-        <description name="description">This sets the default amount of time, in seconds, to wait for a response from the Relation Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
+        <label>Relation Extraction Timeout</label>
+        <description>This sets the default amount of time, in seconds, to wait for a response from the Relation Extraction API call.  A value of 0 indicates that the global AlchemyLanguage timeout setting should be used.</description>
       </declare>
     </proto-section>
   </prototype>
@@ -596,7 +596,7 @@ but we also want to run some AlchemyAPI analysis -->
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
-    
+
     <!-- Entity Extraction -->
     <xsl:if test="$enable-entity-extraction">
       <xsl:variable name="entity-extraction-text">
@@ -611,8 +611,8 @@ but we also want to run some AlchemyAPI analysis -->
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
-    
-    
+
+
     <!-- Keyword Extraction -->
     <xsl:if test="$enable-keyword-extraction">
       <xsl:variable name="keyword-extraction-text" >
@@ -627,8 +627,8 @@ but we also want to run some AlchemyAPI analysis -->
         </xsl:apply-templates>
       </xsl:if>
     </xsl:if>
-    
-    
+
+
     <!-- Relation Extraction -->
     <xsl:if test="$enable-relation-extraction">
       <xsl:variable name="relation-extraction-text" >
@@ -798,7 +798,7 @@ but we also want to run some AlchemyAPI analysis -->
   <xsl:param name="text" />
   <xsl:variable name="concept-tagging-url" select="concat($alchemy-base-url, $concept-tagging-url-path)" />
   <xsl:variable name="timeout" select="viv:choose($concept-tagging-timeout = 0, $default-timeout, $concept-tagging-timeout) * 1000" />
-  
+
   <xsl:variable name="xml">
     <parse url="{$concept-tagging-url}" method="POST">
       <xsl:if test="$proxy-host-port" >
@@ -807,19 +807,19 @@ but we also want to run some AlchemyAPI analysis -->
       <xsl:if test="$proxy-user-pass" >
           <attribute name="proxy-user-password" value="{$proxy-user-pass}" />
       </xsl:if>
-    
+
       <parse-param name="outputmode" value="xml" />
       <parse-param name="apikey">
           <attribute name="value"><xsl:value-of select="$alchemy-apikey" /></attribute>
       </parse-param>
-    
+
       <parse-param name="text">
         <attribute name="value"><xsl:value-of select="$text" /></attribute>
       </parse-param>
       <parse-param name="linkedData" value="0" />
       <parse-param name="knowledgeGraph" value="0" />
     </parse>
-    
+
     <fetch finish="finish" timeout="{$timeout}" />
   </xsl:variable>
   <!-- execute the fetch pointing at the API -->
