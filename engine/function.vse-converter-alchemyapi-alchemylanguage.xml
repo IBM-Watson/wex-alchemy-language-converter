@@ -865,7 +865,7 @@ but we also want to run some AlchemyAPI analysis -->
         </attribute>
       </parse-param>
       <parse-param name="disambiguate" value="1" />
-      <parse-param name="linkedData" value="={viv:if-else($entity-link-data, 1, 0)}" />
+      <parse-param name="linkedData" value="{viv:if-else($entity-link-data, 1, 0)}" />
       <parse-param name="coreference" value="1" />
       <parse-param name="quotations" value="0" />
       <parse-param name="sentiment" value="0" />
