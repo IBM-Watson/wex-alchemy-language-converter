@@ -145,6 +145,10 @@
         <label>Maximum Entities</label>
         <description>This sets the maximum number of entities to extract.  Entities in the text that might be found beyond this limit will not be returned.</description>
       </declare>
+      <declare type="flag" name="entity-extraction-sentiment">
+        <label>Return Sentiment</label>
+        <description>Return sentiment value for each entity.  Note that this incurs an additional transaction cost.</description>
+      </declare>
       <declare type="flag" name="entity-link-data">
         <label>Return Link Data</label>
         <description>Return semantic link data (e.g. DBPedia) if available.</description>
@@ -415,6 +419,14 @@
       <with name="value">
         <if-var name="entity-extraction-contents">
           <value-of-var name="entity-extraction-contents" />
+        </if-var>
+      </with>
+    </call-function>
+    <call-function name="xsl-parser-variable">
+      <with name="name">entity-extraction-sentiment</with>
+      <with name="value">
+        <if-var name="entity-extraction-sentiment">
+          <value-of-var name="entity-extraction-sentiment" />
         </if-var>
       </with>
     </call-function>
@@ -868,7 +880,7 @@ but we also want to run some AlchemyAPI analysis -->
       <parse-param name="linkedData" value="{viv:if-else($entity-link-data, 1, 0)}" />
       <parse-param name="coreference" value="1" />
       <parse-param name="quotations" value="0" />
-      <parse-param name="sentiment" value="0" />
+      <parse-param name="sentiment" value="{viv:if-else($entity-extraction-sentiment, 1, 0)}" />
       <parse-param name="showSourceText" value="0" />
       <parse-param name="maxRetrieve" value="{$entity-extraction-max}" />
       <parse-param name="knowledgeGraph" value="0" />
@@ -886,6 +898,8 @@ but we also want to run some AlchemyAPI analysis -->
           <xsl:variable name="entity-type" select="./type" />
           <xsl:variable name="entity-count" select="./count" />
           <xsl:variable name="entity-relevance" select="./relevance" />
+          <xsl:variable name="entity-sentiment-type" select="./sentiment/type" />
+          <xsl:variable name="entity-sentiment-score" select="./sentiment/score" />
           <xsl:choose>
             <xsl:when test="count(.//disambiguated) > 0" >
               <xsl:for-each select=".//disambiguated" >
@@ -897,13 +911,13 @@ but we also want to run some AlchemyAPI analysis -->
                 <xsl:choose>
                   <xsl:when test="count(.//subType) > 0">
                     <xsl:for-each select=".//subType" >
-                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
+                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" sentiment-type="{$entity-sentiment-type}" sentiment-score="{$entity-sentiment-score}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
                         <xsl:value-of select="concat($entity-type, $sgts, ., $sgts, $detected-entity, $sgts, $entity-name)" />
                       </content>
                     </xsl:for-each>
                   </xsl:when>
                   <xsl:otherwise>
-                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
+                      <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" sentiment-type="{$entity-sentiment-type}" sentiment-score="{$entity-sentiment-score}" count="{$entity-count}" website="{$entity-website}" dbpedia="{$entity-dbpedia}">
                         <xsl:value-of select="concat($entity-type, $sgts, $entity-name)" />
                       </content>
                   </xsl:otherwise>
@@ -911,7 +925,7 @@ but we also want to run some AlchemyAPI analysis -->
               </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-              <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" count="{$entity-count}" >
+              <content name="alchemyapi-entity" action="none" type="text" relevance="{$entity-relevance}" entity-type="{$entity-type}" sentiment-type="{$entity-sentiment-type}" sentiment-score="{$entity-sentiment-score}" count="{$entity-count}">
                 <xsl:value-of select="concat($entity-type, $sgts, $detected-entity)" />
               </content>
             </xsl:otherwise>
