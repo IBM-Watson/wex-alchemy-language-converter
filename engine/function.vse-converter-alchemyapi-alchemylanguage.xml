@@ -5,7 +5,7 @@
 
       See the AlchemyLanguage API Reference for examples and detailed information on each AlchemyLanguage function (http://www.alchemyapi.com/products/alchemylanguage).
     </description>
-    <label>AlchemyLangauge Converter</label>
+    <label>AlchemyLanguage Converter</label>
 
     <!-- Global -->
     <declare type="url" name="alchemy-base-url" initial-value="https://access.alchemyapi.com/">
